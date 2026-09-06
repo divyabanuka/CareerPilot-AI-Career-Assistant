@@ -1,6 +1,6 @@
-# [Project name]
+# CareerPilot – AI Career Assistant
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+CareerPilot is a full-stack career command center for college students and fresh graduates to track opportunities, build evidence, and make their next move visible.
 
 ## Run & Operate
 
@@ -22,23 +22,32 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/careerpilot/src/App.tsx` — responsive landing page, protected app shell, CRUD screens, assistant, resume lab, analytics, and profile UI.
+- `artifacts/api-server/src/routes/careerpilot.ts` — authenticated CareerPilot API routes, demo analysis logic, seeded first-run data, and account-scoped queries.
+- `lib/api-spec/openapi.yaml` — source of truth for the generated client and Zod API contracts.
+- `lib/db/src/schema/index.ts` — PostgreSQL schema for profiles and account-owned career records.
+- `artifacts/careerpilot/src/index.css` — shared light/dark theme, typography, motion, and surface tokens.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Clerk owns browser authentication and sessions; API routes use Clerk's session cookie and never expose bearer tokens to the web client.
+- Career records store `userId` on every table and are queried with ownership predicates so profiles, applications, skills, certificates, goals, and activities remain account-scoped.
+- Resume analysis and CareerPilot AI are deliberately local demo heuristics with typed API boundaries, so a paid AI provider can be connected later without changing the UI contract.
+- The UI uses generated React Query hooks from the OpenAPI contract so mutations can invalidate the relevant user-scoped lists.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Landing and auth flows lead into a protected dashboard with readiness progress, deadlines, activity, recommendations, a searchable job/application tracker, skills and certificates, career goals, resume analysis, a demo AI assistant, analytics, profile editing, and light/dark mode.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+The user asked for a polished startup-quality SaaS experience that is responsive on desktop and mobile, with working CRUD and real per-account persistence rather than a static prototype.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After changing `lib/api-spec/openapi.yaml`, run `pnpm --filter @workspace/api-spec run codegen` before using generated hooks or schemas.
+- The Vite app requires workflow-provided `PORT` and `BASE_PATH`; use the managed `artifacts/careerpilot: web` workflow for previews and production builds.
+- The first authenticated profile request seeds a small example dataset for that account only; later requests use the stored PostgreSQL records.
 
 ## Pointers
 

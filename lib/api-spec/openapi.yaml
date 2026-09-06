@@ -1,22 +1,34 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: CareerPilot career management API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: dashboard
+    description: Career dashboard summaries
+  - name: profile
+    description: User profile
+  - name: applications
+    description: Internship and job applications
+  - name: skills
+    description: Technical and soft skills
+  - name: certificates
+    description: Certificates and credentials
+  - name: goals
+    description: Career goals
+  - name: assistant
+    description: CareerPilot AI demo assistant
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +36,590 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary
+      responses:
+        "200":
+          description: Dashboard overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /analytics:
+    get:
+      operationId: getAnalytics
+      tags: [dashboard]
+      summary: Get analytics aggregates
+      responses:
+        "200":
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Analytics"
+  /activities:
+    get:
+      operationId: listActivities
+      tags: [dashboard]
+      summary: List recent activity
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Activity"
+  /profile:
+    get:
+      operationId: getProfile
+      tags: [profile]
+      summary: Get the current user profile
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+    patch:
+      operationId: updateProfile
+      tags: [profile]
+      summary: Update the current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileUpdate"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+  /applications:
+    get:
+      operationId: listApplications
+      tags: [applications]
+      summary: List applications
+      responses:
+        "200":
+          description: Applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+    post:
+      operationId: createApplication
+      tags: [applications]
+      summary: Create an application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+      responses:
+        "201":
+          description: Created application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+  /applications/{id}:
+    patch:
+      operationId: updateApplication
+      tags: [applications]
+      summary: Update an application
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationUpdate"
+      responses:
+        "200":
+          description: Updated application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+    delete:
+      operationId: deleteApplication
+      tags: [applications]
+      summary: Delete an application
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /skills:
+    get:
+      operationId: listSkills
+      tags: [skills]
+      summary: List skills
+      responses:
+        "200":
+          description: Skills
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Skill"
+    post:
+      operationId: createSkill
+      tags: [skills]
+      summary: Create a skill
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SkillInput"
+      responses:
+        "201":
+          description: Created skill
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Skill"
+  /skills/{id}:
+    patch:
+      operationId: updateSkill
+      tags: [skills]
+      summary: Update a skill
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SkillUpdate"
+      responses:
+        "200":
+          description: Updated skill
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Skill"
+    delete:
+      operationId: deleteSkill
+      tags: [skills]
+      summary: Delete a skill
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /certificates:
+    get:
+      operationId: listCertificates
+      tags: [certificates]
+      summary: List certificates
+      responses:
+        "200":
+          description: Certificates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Certificate"
+    post:
+      operationId: createCertificate
+      tags: [certificates]
+      summary: Create a certificate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateInput"
+      responses:
+        "201":
+          description: Created certificate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Certificate"
+  /certificates/{id}:
+    patch:
+      operationId: updateCertificate
+      tags: [certificates]
+      summary: Update a certificate
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateUpdate"
+      responses:
+        "200":
+          description: Updated certificate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Certificate"
+    delete:
+      operationId: deleteCertificate
+      tags: [certificates]
+      summary: Delete a certificate
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /goals:
+    get:
+      operationId: listGoals
+      tags: [goals]
+      summary: List career goals
+      responses:
+        "200":
+          description: Goals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Goal"
+    post:
+      operationId: createGoal
+      tags: [goals]
+      summary: Create a career goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalInput"
+      responses:
+        "201":
+          description: Created goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+  /goals/{id}:
+    patch:
+      operationId: updateGoal
+      tags: [goals]
+      summary: Update a career goal
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalUpdate"
+      responses:
+        "200":
+          description: Updated goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goal"
+    delete:
+      operationId: deleteGoal
+      tags: [goals]
+      summary: Delete a career goal
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Deleted
+  /resume/analyze:
+    post:
+      operationId: analyzeResume
+      tags: [dashboard]
+      summary: Analyze resume text with local demo heuristics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResumeInput"
+      responses:
+        "200":
+          description: Resume analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAnalysis"
+  /assistant/chat:
+    post:
+      operationId: sendAssistantMessage
+      tags: [assistant]
+      summary: Send a message to the CareerPilot demo assistant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssistantMessage"
+      responses:
+        "200":
+          description: Assistant response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssistantReply"
 components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
   schemas:
     HealthStatus:
       type: object
       properties:
         status:
           type: string
-      required:
-        - status
-
+      required: [status]
+    Profile:
+      type: object
+      required: [id, name, email, college, degree, graduationYear, careerGoal, linkedin, github]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string }
+        college: { type: string }
+        degree: { type: string }
+        graduationYear: { type: integer }
+        careerGoal: { type: string }
+        linkedin: { type: string }
+        github: { type: string }
+    ProfileUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        college: { type: string }
+        degree: { type: string }
+        graduationYear: { type: integer }
+        careerGoal: { type: string }
+        linkedin: { type: string }
+        github: { type: string }
+    Application:
+      type: object
+      required: [id, company, role, location, applicationDate, deadline, jobUrl, status]
+      properties:
+        id: { type: string }
+        company: { type: string }
+        role: { type: string }
+        location: { type: string }
+        applicationDate: { type: string }
+        deadline: { type: string }
+        jobUrl: { type: string }
+        status:
+          type: string
+          enum: [Saved, Applied, Interview, Selected, Rejected]
+    ApplicationInput:
+      type: object
+      required: [company, role, location, applicationDate, deadline, jobUrl, status]
+      properties:
+        company: { type: string }
+        role: { type: string }
+        location: { type: string }
+        applicationDate: { type: string }
+        deadline: { type: string }
+        jobUrl: { type: string }
+        status:
+          type: string
+          enum: [Saved, Applied, Interview, Selected, Rejected]
+    ApplicationUpdate:
+      allOf:
+        - $ref: "#/components/schemas/ApplicationInput"
+    Skill:
+      type: object
+      required: [id, name, type, proficiency]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type:
+          type: string
+          enum: [Technical, Soft]
+        proficiency: { type: integer, minimum: 0, maximum: 100 }
+    SkillInput:
+      type: object
+      required: [name, type, proficiency]
+      properties:
+        name: { type: string }
+        type:
+          type: string
+          enum: [Technical, Soft]
+        proficiency: { type: integer, minimum: 0, maximum: 100 }
+    SkillUpdate:
+      allOf:
+        - $ref: "#/components/schemas/SkillInput"
+    Certificate:
+      type: object
+      required: [id, name, organization, date, credentialUrl]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        organization: { type: string }
+        date: { type: string }
+        credentialUrl: { type: string }
+    CertificateInput:
+      type: object
+      required: [name, organization, date, credentialUrl]
+      properties:
+        name: { type: string }
+        organization: { type: string }
+        date: { type: string }
+        credentialUrl: { type: string }
+    CertificateUpdate:
+      allOf:
+        - $ref: "#/components/schemas/CertificateInput"
+    Goal:
+      type: object
+      required: [id, title, description, progress, targetDate]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        progress: { type: integer, minimum: 0, maximum: 100 }
+        targetDate: { type: string }
+    GoalInput:
+      type: object
+      required: [title, description, progress, targetDate]
+      properties:
+        title: { type: string }
+        description: { type: string }
+        progress: { type: integer, minimum: 0, maximum: 100 }
+        targetDate: { type: string }
+    GoalUpdate:
+      allOf:
+        - $ref: "#/components/schemas/GoalInput"
+    Activity:
+      type: object
+      required: [id, title, detail, createdAt, tone]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        detail: { type: string }
+        createdAt: { type: string }
+        tone:
+          type: string
+          enum: [blue, purple, green, orange]
+    DashboardSummary:
+      type: object
+      required: [progress, applications, interviews, selected, skills, certificates, upcomingDeadlines, recommendation]
+      properties:
+        progress: { type: integer }
+        applications: { type: integer }
+        interviews: { type: integer }
+        selected: { type: integer }
+        skills: { type: integer }
+        certificates: { type: integer }
+        upcomingDeadlines:
+          type: array
+          items:
+            $ref: "#/components/schemas/Deadline"
+        recommendation: { type: string }
+    Deadline:
+      type: object
+      required: [id, company, role, deadline, daysLeft]
+      properties:
+        id: { type: string }
+        company: { type: string }
+        role: { type: string }
+        deadline: { type: string }
+        daysLeft: { type: integer }
+    Analytics:
+      type: object
+      required: [applicationsByMonth, applicationStatus, skillsProgress, goalsProgress, totals]
+      properties:
+        applicationsByMonth:
+          type: array
+          items:
+            type: object
+            required: [month, applications, interviews]
+            properties:
+              month: { type: string }
+              applications: { type: integer }
+              interviews: { type: integer }
+        applicationStatus:
+          type: array
+          items:
+            type: object
+            required: [status, count]
+            properties:
+              status: { type: string }
+              count: { type: integer }
+        skillsProgress:
+          type: array
+          items:
+            type: object
+            required: [name, proficiency]
+            properties:
+              name: { type: string }
+              proficiency: { type: integer }
+        goalsProgress:
+          type: array
+          items:
+            type: object
+            required: [title, progress]
+            properties:
+              title: { type: string }
+              progress: { type: integer }
+        totals:
+          type: object
+          required: [certificates, successRate]
+          properties:
+            certificates: { type: integer }
+            successRate: { type: integer }
+    ResumeInput:
+      type: object
+      required: [filename, text]
+      properties:
+        filename: { type: string }
+        text: { type: string }
+    ResumeAnalysis:
+      type: object
+      required: [score, detectedSkills, missingSkills, suggestions, recommendations]
+      properties:
+        score: { type: integer }
+        detectedSkills:
+          type: array
+          items: { type: string }
+        missingSkills:
+          type: array
+          items: { type: string }
+        suggestions:
+          type: array
+          items: { type: string }
+        recommendations:
+          type: array
+          items: { type: string }
+    AssistantMessage:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string }
+    AssistantReply:
+      type: object
+      required: [message, suggestions]
+      properties:
+        message: { type: string }
+        suggestions:
+          type: array
+          items: { type: string }

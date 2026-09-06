@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "CareerPilot – AI Career Assistant"
+description = "A full-stack career command center for college students and fresh graduates to track applications, grow skills, manage goals, analyze resumes, and prepare for the next opportunity."
+version = "1.0.0"
+id = "artifacts/careerpilot"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20772
+
+[services.development]
+run = "pnpm --filter @workspace/careerpilot run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/careerpilot", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/careerpilot/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20772"
+BASE_PATH = "/"
